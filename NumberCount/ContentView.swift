@@ -1346,16 +1346,17 @@ struct ContentView: View {
         GeometryReader { geo in
             mainQuizLayout(geo: geo)
         }
-        .onChange(of: maxNumber) { nextRound() }
-        .onChange(of: selectedMode) { nextRound() }
-        .onChange(of: themeCategoriesStorage) { nextRound() }
+        .onChange(of: maxNumber, perform: { _ in nextRound() })
+        .onChange(of: selectedMode, perform: { _ in nextRound() })
+        .onChange(of: themeCategoriesStorage, perform: { _ in nextRound() })
         .sheet(isPresented: $showSettings) {
-            NavigationStack {
+            NavigationView {
                 SettingsView(
                     audio: audio,
                     feedbackRecorder: feedbackRecorder
                 )
             }
+            .navigationViewStyle(.stack)
         }
         .onAppear {
             withAnimation { numScale = 1.0 }

@@ -66,8 +66,7 @@ struct SettingsView: View {
         .preferredColorScheme(.light)
         .navigationTitle(language.settingsNavigationTitle)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(cream, for: .navigationBar)
-        .toolbarColorScheme(.light, for: .navigationBar)
+        .settingsNavigationBarStyle(background: cream)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button(language.settingsDone) { dismiss() }
@@ -367,5 +366,17 @@ struct SettingsView: View {
                     .stroke(color, lineWidth: lineWidth)
             )
             .shadow(color: Color.black.opacity(0.1), radius: 12, y: 5)
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func settingsNavigationBarStyle(background: Color) -> some View {
+        if #available(iOS 16.0, *) {
+            toolbarBackground(background, for: .navigationBar)
+                .toolbarColorScheme(.light, for: .navigationBar)
+        } else {
+            self
+        }
     }
 }

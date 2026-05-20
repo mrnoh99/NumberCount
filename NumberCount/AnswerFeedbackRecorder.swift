@@ -61,7 +61,11 @@ final class AnswerFeedbackRecorder: NSObject, ObservableObject {
 
     private func startRecordingIfPermitted(kind: AnswerFeedbackKind, language: AppLanguage) async {
         guard !isRecording else { return }
-        let allowed = await AVAudioApplication.requestRecordPermission()
+        let allowed = await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
+            AVAudioSession.sharedInstance().requestRecordPermission { granted in
+                continuation.resume(returning: granted)
+            }
+        }
         guard allowed else { return }
         let session = AVAudioSession.sharedInstance()
         do {
